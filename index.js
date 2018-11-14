@@ -62,6 +62,14 @@ const defaults = {
 }
 
 /**
+ * Locks removing/writing to avoid inconsistencies
+ *
+ * @type {boolean}
+ * @private
+ */
+let __writing__ = false
+
+/**
  * Creates a new realtime entry
  *
  * @param {string|Object} options
@@ -143,11 +151,8 @@ rs.remove = function removeRs (entry) {
     throw new Error('the given value is not a valid entry')
   }
 
-  const desc = entry[__entry__]
-
-  getStorage(desc.storage).removeItem(desc.name)
-
-  desc.revoke()
+  // Perform entry removing in a sync/async way
+  removeEntry(entry)
 }
 
 function syncWrite (storage, name, entry, serializer) {
@@ -155,15 +160,29 @@ function syncWrite (storage, name, entry, serializer) {
 }
 
 function asyncWrite (storage, name, entry, serializer) {
-  if (asyncWrite.writting) return
+  if (__writing__) return
 
-  asyncWrite.writting = true
+  __writing__ = true
 
   setTimeout(() => {
     syncWrite(storage, name, entry, serializer)
 
-    asyncWrite.writting = false
+    __writing__ = false
   })
+}
+
+function removeEntry (entry) {
+  if (__writing__) {
+
+    // Re-schedule remove... Wait until writing has completed
+    return setTimeout(removeEntry, 0, entry)
+  }
+
+  const desc = entry[__entry__]
+
+  getStorage(desc.storage).removeItem(desc.name)
+
+  desc.revoke()
 }
 
 function getRevocableWriter (value, write, info) {
