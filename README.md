@@ -1,5 +1,7 @@
 # Realtime Storage
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/aeroxmotion/realtime-storage.svg)](https://greenkeeper.io/)
+
   Persist your JS objects in the [`Web Storage`](https://html.spec.whatwg.org/multipage/webstorage.html).
 
 ## Usage
