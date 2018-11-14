@@ -139,7 +139,7 @@ rs.session = function sessionRs (name, entry) {
  * @api public
  */
 rs.remove = function removeRs (entry) {
-  if (!canProxify(entry) || !entry[__entry__]) {
+  if (!isObject(entry) || !entry[__entry__]) {
     throw new Error('the given value is not a valid entry')
   }
 
@@ -177,13 +177,13 @@ function getRevocableWriter (value, write, info) {
     defineProperty (target, property, descriptor) {
       const { value: _value } = descriptor
 
-      if (canProxify(key, _value)) {
+      if (canProxify(property, _value)) {
         descriptor.value = getRevocableWriter(_value, write, info)
       }
 
       const defined = Reflect.defineProperty(target, property, descriptor)
 
-      if (canWrite(key, defined)) write()
+      if (canWrite(property, defined)) write()
 
       return defined
     },
@@ -192,11 +192,11 @@ function getRevocableWriter (value, write, info) {
       const _value = target[property]
       const deleted = Reflect.deleteProperty(target, property)
 
-      if (canProxify(key, _value)) {
+      if (canProxify(property, _value)) {
         _value[__entry__].revoke()
       }
 
-      if (canWrite(key, deleted)) write()
+      if (canWrite(property, deleted)) write()
 
       return deleted
     }
@@ -227,7 +227,7 @@ function getStorage (name) {
 }
 
 function canProxify (key, value) {
-  return !isSymbol(key) && value !== null && typeof value === 'object'
+  return !isSymbol(key) && isObject(value)
 }
 
 function canWrite (key, changed) {
@@ -236,4 +236,8 @@ function canWrite (key, changed) {
 
 function isSymbol (value) {
   return typeof value === 'symbol'
+}
+
+function isObject (value) {
+  return value !== null && typeof value === 'object'
 }
