@@ -1,0 +1,12 @@
+{
+  "name": "realtime-storage",
+  "version": "0.1.0",
+  "description": "Realtime Storage",
+  "main": "index.js",
+  "author": "Camilo Rodríguez <aeromotiondesign@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "proxy-observer": "LosMaquios/ProxyObserver"
+  }
+}
