@@ -40,7 +40,7 @@ const defaults = {
    *
    * @type {boolean}
    */
-  preserve: false,
+  preserve: true,
 
   /**
    * Serialize entry object on each write
