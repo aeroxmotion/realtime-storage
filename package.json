@@ -2,11 +2,17 @@
   "name": "realtime-storage",
   "version": "0.1.0",
   "description": "Realtime Storage",
-  "main": "index.js",
+  "main": "realtime-storage.js",
   "author": "Camilo Rodríguez <aeromotiondesign@gmail.com>",
   "license": "MIT",
   "private": true,
-  "dependencies": {
-    "proxy-observer": "LosMaquios/ProxyObserver"
+  "scripts": {
+    "build": "browserify index.js -o realtime-storage.js -t [ babelify --presets [ @babel/preset-env ] ]"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3"
   }
 }
